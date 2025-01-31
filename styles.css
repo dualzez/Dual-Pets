@@ -1,0 +1,335 @@
+/* Fuente retro */
+body {
+  margin: 0;
+  padding: 0;
+  background: #1a1a1a;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Controles de música */
+#music-controls {
+  margin-top: 10px;
+}
+
+#music-controls button {
+  background-color: #333;
+  color: #fff;
+  border: 2px solid #555;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+}
+
+#music-controls button:hover {
+  background-color: #555;
+}
+
+#volume-control {
+  margin-left: 10px;
+  width: 100px;
+}
+
+/* Contenedor del juego */
+#game-container {
+  width: 95%;
+  max-width: 1200px;
+  height: 85vh;
+  max-height: 700px;
+  margin: 20px auto;
+  background: rgba(0, 0, 0, 0.9);
+  border: 5px solid #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  animation: glowAnimation 30s infinite;
+  position: relative;
+}
+
+/* Animación del glow cambiante del marco */
+@keyframes glowAnimation {
+  0% {
+    box-shadow: 0 0 20px #ff69b4;
+    border-color: #ff69b4;
+  }
+  50% {
+    box-shadow: 0 0 20px #32cd32;
+    border-color: #32cd32;
+  }
+  100% {
+    box-shadow: 0 0 20px #ff69b4;
+    border-color: #ff69b4;
+  }
+}
+
+/* Estilos generales de botones */
+button {
+  background-color: #333;
+  color: #fff;
+  border: 2px solid #555;
+  padding: 15px 25px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'Press Start 2P', cursive;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
+/* Estilos de imágenes */
+img {
+  image-rendering: pixelated;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Pantalla de inicio */
+#loading-screen {
+  width: 100%;
+  height: 100%;
+  background-image: url('images/start-background.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: bgFadeZoomIn 2s forwards, backgroundZoom 15s infinite alternate;
+  position: relative;
+}
+
+/* Animación de aparición suave del fondo */
+@keyframes bgFadeZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animación de zoom continuo del fondo */
+@keyframes backgroundZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+/* Estilos del logo */
+#logo {
+  max-width: 50%;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: logoFadeIn 1.5s forwards;
+}
+
+/* Animación del logo */
+@keyframes logoFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos del botón "Jugar" */
+#loading-screen button {
+  margin-top: 20px;
+  background-color: #28a745;
+  color: #fff;
+  border-color: #1e7e34;
+  padding: 20px 30px;
+  font-size: 1.2em;
+  opacity: 0;
+  animation: buttonEntrance 1.5s forwards, buttonPulse 2s infinite;
+}
+
+/* Animación de entrada del botón */
+@keyframes buttonEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animación de pulso del botón */
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #28a745;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #28a745;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #28a745;
+  }
+}
+
+#loading-screen button:hover {
+  background-color: #218838;
+}
+
+/* Transición al hacer clic en "Jugar" */
+.fade-out {
+  animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Menú de selección de mascotas */
+#pets-selection-wrapper {
+  width: 100%;
+  height: 100%;
+  background-image: url('images/pet-selection-background.png');
+  background-size: cover;
+  background-position: center;
+  animation: backgroundZoom 15s infinite alternate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Texto "Elige tu Mascota" */
+#pets-selection-wrapper h1 {
+  color: #8A2BE2; /* Lila más fuerte */
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px #8A2BE2; /* Efecto de resplandor fijo */
+}
+
+/* Contenedor de las mascotas */
+.pets-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Estilos de las mascotas */
+.pet-option {
+  width: 80px;
+  height: 80px;
+  margin: 15px;
+  cursor: pointer;
+  animation: petOptionEntry 1s forwards;
+  transition: transform 0.3s, filter 0.3s;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px #fff;
+}
+
+.pet-option:hover {
+  transform: scale(1.3);
+  filter: brightness(1.2);
+}
+
+/* Animación de aparición de las mascotas */
+@keyframes petOptionEntry {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para el menú principal */
+#main-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+}
+
+#main-menu #pet-img {
+  width: 128px;
+  height: 128px;
+  animation: petEntry 1s forwards;
+  margin-bottom: 20px;
+}
+
+@keyframes petEntry {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#navigation {
+  display: flex;
+  justify-content: center;
+}
+
+#navigation button {
+  margin: 0 10px;
+}
+
+#stats-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  text-align: left;
+}
+
+#stats p {
+  margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+  #logo {
+    max-width: 80%;
+  }
+
+  button {
+    padding: 10px 15px;
+    font-size: 1em;
+  }
+
+  .pet-option {
+    width: 60px;
+    height: 60px;
+  }
+
+  #main-menu #pet-img {
+    width: 100px;
+    height: 100px;
+  }
+}
