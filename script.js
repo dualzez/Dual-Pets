@@ -1,20 +1,100 @@
+// Añadir funcionalidad de pantalla completa
+function setupFullscreenButton() {
+  const fullscreenBtn = document.getElementById('fullscreen-btn');
+  
+  fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+              console.log(`Error al intentar modo pantalla completa: ${err.message}`);
+          });
+          fullscreenBtn.textContent = '🔽 Salir P.Completa';
+      } else {
+          document.exitFullscreen();
+          fullscreenBtn.textContent = '📺 Pantalla Completa';
+      }
+  });
+
+  // Actualizar el botón cuando cambie el estado de pantalla completa
+  document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+          fullscreenBtn.textContent = '📺 Pantalla Completa';
+      } else {
+          fullscreenBtn.textContent = '🔽 Salir P.Completa';
+      }
+  });
+}
+
+// Modificar la función startGame para incluir la configuración de pantalla completa
+function startGame() {
+  setupMusicControls();
+  setupFullscreenButton();
+  showLoadingScreen();
+}
+
+// Modificar showPetSelection para mantener el logo visible
+function showPetSelection() {
+  const container = document.getElementById('game-container');
+  container.innerHTML = '';
+
+  const petsWrapper = document.createElement('div');
+  petsWrapper.id = 'pets-selection-wrapper';
+
+  const title = document.createElement('h1');
+  title.textContent = 'Elige tu Mascota';
+  petsWrapper.appendChild(title);
+
+  const petsContainer = document.createElement('div');
+  petsContainer.className = 'pets-container';
+
+  const pets = ['mascota1', 'mascota2', 'mascota3'];
+
+  pets.forEach(pet => {
+      const petImg = document.createElement('img');
+      petImg.src = `images/mascotas/${pet}.png`;
+      petImg.alt = pet;
+      petImg.classList.add('pet-option');
+      
+      // Añadir animación al seleccionar
+      petImg.addEventListener('click', () => {
+          petImg.style.transform = 'scale(1.5) rotate(360deg)';
+          petImg.style.transition = 'all 0.5s ease';
+          
+          setTimeout(() => {
+              selectedPet = pet;
+              loadHome();
+          }, 500);
+      });
+      
+      petsContainer.appendChild(petImg);
+  });
+
+  petsWrapper.appendChild(petsContainer);
+  container.appendChild(petsWrapper);
+}
 // Variables globales
 let selectedPet = null;
 let gameState = {
-  hunger: 100,
-  happiness: 100,
-  hygiene: 100,
-  energy: 100,
-  location: 'home',
-  intervalId: null
+    hunger: 100,
+    happiness: 100,
+    hygiene: 100,
+    energy: 100,
+    location: 'home',
+    intervalId: null
 };
 
 // Iniciar el juego al cargar la página
 window.onload = startGame;
 
 function startGame() {
-  setupMusicControls();
-  showLoadingScreen();
+    setupMusicControls();
+    showLoadingScreen();
+}
+
+// Función para hacer que las estadísticas bajen con el tiempo
+function startStatsDecrement() {
+    if (!gameState.intervalId) {
+        gameState.intervalId = setInterval(decreaseStats, 5000);
+    }
 }
 
 /* Configurar controles de música */
@@ -71,153 +151,172 @@ function showLoadingScreen() {
 
 /* 1. Selección de Mascota */
 function showPetSelection() {
-  const container = document.getElementById('game-container');
-  container.innerHTML = '';
+    const container = document.getElementById('game-container');
+    container.innerHTML = '';
 
-  const petsWrapper = document.createElement('div');
-  petsWrapper.id = 'pets-selection-wrapper';
+    const petsWrapper = document.createElement('div');
+    petsWrapper.id = 'pets-selection-wrapper';
 
-  const title = document.createElement('h1');
-  title.textContent = 'Elige tu Mascota';
-  petsWrapper.appendChild(title);
+    const title = document.createElement('h1');
+    title.textContent = 'Elige tu Mascota';
+    petsWrapper.appendChild(title);
 
-  const petsContainer = document.createElement('div');
-  petsContainer.className = 'pets-container';
+    const petsContainer = document.createElement('div');
+    petsContainer.className = 'pets-container';
 
-  const pets = ['mascota1', 'mascota2', 'mascota3'];
+    const pets = ['mascota1', 'mascota2', 'mascota3'];
 
-  pets.forEach(pet => {
-    const petImg = document.createElement('img');
-    petImg.src = `images/mascotas/${pet}.png`;
-    petImg.alt = pet;
-    petImg.classList.add('pet-option');
-    petImg.addEventListener('click', () => {
-      selectedPet = pet;
-      loadHome();
+    pets.forEach(pet => {
+        const petImg = document.createElement('img');
+        petImg.src = `images/mascotas/${pet}.png`;
+        petImg.alt = pet;
+        petImg.classList.add('pet-option');
+        petImg.addEventListener('click', () => {
+            selectedPet = pet;
+            loadHome();
+        });
+        petsContainer.appendChild(petImg);
     });
-    petsContainer.appendChild(petImg);
-  });
 
-  petsWrapper.appendChild(petsContainer);
-  container.appendChild(petsWrapper);
+    petsWrapper.appendChild(petsContainer);
+    container.appendChild(petsWrapper);
 }
-
 
 /* 2. Pantalla Principal */
 function loadHome() {
-  gameState.location = 'home';
-  const container = document.getElementById('game-container');
-  container.innerHTML = '';
-  container.style.backgroundImage = 'url("images/home-background.png")';
-  container.style.backgroundSize = 'cover';
-  container.style.backgroundPosition = 'center';
+    gameState.location = 'home';
+    const container = document.getElementById('game-container');
+    container.innerHTML = '';
+    container.style.backgroundImage = 'url("images/home-background.png")';
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPosition = 'center';
 
-  const mainMenu = document.createElement('div');
-  mainMenu.id = 'main-menu';
+    const mainMenu = document.createElement('div');
+    mainMenu.id = 'main-menu';
 
-  // Agregamos la imagen de la mascota
-  const petImg = document.createElement('img');
-  petImg.src = `images/mascotas/${selectedPet}.png`;
-  petImg.id = 'pet-img';
-  mainMenu.appendChild(petImg);
+    const petImg = document.createElement('img');
+    petImg.src = `images/mascotas/${selectedPet}.png`;
+    petImg.id = 'pet-img';
+    mainMenu.appendChild(petImg);
 
-  // Agregamos botones de navegación
-  const navDiv = document.createElement('div');
-  navDiv.id = 'navigation';
+    const navDiv = document.createElement('div');
+    navDiv.id = 'navigation';
 
-  const kitchenBtn = document.createElement('button');
-  kitchenBtn.textContent = 'Cocina';
-  kitchenBtn.addEventListener('click', loadKitchen);
-  navDiv.appendChild(kitchenBtn);
+    const kitchenBtn = document.createElement('button');
+    kitchenBtn.textContent = 'Cocina';
+    kitchenBtn.addEventListener('click', loadKitchen);
+    navDiv.appendChild(kitchenBtn);
 
-  const bathroomBtn = document.createElement('button');
-  bathroomBtn.textContent = 'Baño';
-  bathroomBtn.addEventListener('click', loadBathroom);
-  navDiv.appendChild(bathroomBtn);
+    const bathroomBtn = document.createElement('button');
+    bathroomBtn.textContent = 'Baño';
+    bathroomBtn.addEventListener('click', loadBathroom);
+    navDiv.appendChild(bathroomBtn);
 
-  const bedroomBtn = document.createElement('button');
-  bedroomBtn.textContent = 'Dormitorio';
-  bedroomBtn.addEventListener('click', loadBedroom);
-  navDiv.appendChild(bedroomBtn);
+    const bedroomBtn = document.createElement('button');
+    bedroomBtn.textContent = 'Dormitorio';
+    bedroomBtn.addEventListener('click', loadBedroom);
+    navDiv.appendChild(bedroomBtn);
 
-  const parkBtn = document.createElement('button');
-  parkBtn.textContent = 'Parque';
-  parkBtn.addEventListener('click', loadPark);
-  navDiv.appendChild(parkBtn);
+    const parkBtn = document.createElement('button');
+    parkBtn.textContent = 'Parque';
+    parkBtn.addEventListener('click', loadPark);
+    navDiv.appendChild(parkBtn);
 
-  mainMenu.appendChild(navDiv);
-  container.appendChild(mainMenu);
+    mainMenu.appendChild(navDiv);
+    container.appendChild(mainMenu);
 
-  showStats();
+    showStats();
+    updateStats();
 
-  if (!gameState.intervalId) {
-    gameState.intervalId = setInterval(decreaseStats, 5000);
-  }
-
-  updateStats();
+    // Iniciar la disminución de estadísticas
+    if (!gameState.intervalId) {
+        gameState.intervalId = setInterval(() => {
+            decreaseStats();
+            updateStats(); // Actualizar HUD inmediatamente
+        }, 5000);
+    }
 }
 
 /* 3. Mostrar Estados */
 function showStats() {
-  const container = document.getElementById('game-container');
+    const container = document.getElementById('game-container');
 
-  const existingStatsContainer = document.getElementById('stats-container');
-  if (existingStatsContainer) {
-    existingStatsContainer.remove();
-  }
+    const existingStatsContainer = document.getElementById('stats-container');
+    if (existingStatsContainer) {
+        existingStatsContainer.remove();
+    }
 
-  const statsContainer = document.createElement('div');
-  statsContainer.id = 'stats-container';
+    const statsContainer = document.createElement('div');
+    statsContainer.id = 'stats-container';
 
-  const statsDiv = document.createElement('div');
-  statsDiv.id = 'stats';
+    const statsDiv = document.createElement('div');
+    statsDiv.id = 'stats';
 
-  ['Hambre', 'Felicidad', 'Higiene', 'Energía'].forEach(stat => {
-    const statKey = translateStat(stat.toLowerCase());
-    const statP = document.createElement('p');
-    statP.textContent = `${stat}: ${gameState[statKey]}`;
-    statP.id = `${statKey}-stat`;
-    statsDiv.appendChild(statP);
-  });
+    const statsConfig = [
+        { name: 'Hambre', emoji: '🍽️', key: 'hunger', colorClass: 'hunger' },
+        { name: 'Felicidad', emoji: '😊', key: 'happiness', colorClass: 'happiness' },
+        { name: 'Higiene', emoji: '🚿', key: 'hygiene', colorClass: 'hygiene' },
+        { name: 'Energía', emoji: '⚡', key: 'energy', colorClass: 'energy' }
+    ];
 
-  statsContainer.appendChild(statsDiv);
-  container.appendChild(statsContainer);
+    statsConfig.forEach(stat => {
+        const statKey = translateStat(stat.key);
+        const statP = document.createElement('p');
+        statP.id = `${statKey}-stat`;
+        statP.className = stat.colorClass;
+        
+        const emojiSpan = document.createElement('span');
+        emojiSpan.className = 'stat-emoji';
+        emojiSpan.textContent = stat.emoji;
+        
+        const valueSpan = document.createElement('span');
+        valueSpan.textContent = ` ${stat.name}: ${gameState[statKey]}`;
+        
+        statP.appendChild(emojiSpan);
+        statP.appendChild(valueSpan);
+        
+        if (gameState[statKey] < 50) {
+            statP.classList.add('stat-low');
+        }
+        
+        statsDiv.appendChild(statP);
+    });
+
+    statsContainer.appendChild(statsDiv);
+    container.appendChild(statsContainer);
 }
 
 /* 4. Actualizar Estados */
 function updateStats() {
-  ['hambre', 'felicidad', 'higiene', 'energía'].forEach(stat => {
-    const statP = document.getElementById(`${stat}-stat`);
-    if (statP) {
-      statP.textContent = `${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${gameState[translateStat(stat)]}`;
-    }
-  });
-
-  const petImg = document.getElementById('pet-img');
-  if (petImg) {
-    if (gameState.hunger < 50 || gameState.hygiene < 50 || gameState.energy < 50) {
-      petImg.src = `images/mascotas/${selectedPet}_sad.png`;
-    } else {
-      petImg.src = `images/mascotas/${selectedPet}.png`;
-    }
-  }
+    ['hambre', 'felicidad', 'higiene', 'energía'].forEach(stat => {
+        const statP = document.getElementById(`${stat}-stat`);
+        if (statP) {
+            const statKey = translateStat(stat);
+            const valueSpan = statP.querySelector('span:last-child');
+            valueSpan.textContent = ` ${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${gameState[statKey]}`;
+            
+            if (gameState[statKey] < 50) {
+                statP.classList.add('stat-low');
+            } else {
+                statP.classList.remove('stat-low');
+            }
+        }
+    });
 }
 
 /* 5. Disminuir Estados con el Tiempo */
 function decreaseStats() {
-  gameState.hunger -= 5;
-  gameState.happiness -= 2;
-  gameState.hygiene -= 3;
-  gameState.energy -= 4;
+    gameState.hunger -= 5;
+    gameState.happiness -= 2;
+    gameState.hygiene -= 3;
+    gameState.energy -= 4;
 
-  Object.keys(gameState).forEach(key => {
-    if (typeof gameState[key] === 'number') {
-      if (gameState[key] < 0) gameState[key] = 0;
-      if (gameState[key] > 100) gameState[key] = 100;
-    }
-  });
-
-  updateStats();
+    Object.keys(gameState).forEach(key => {
+        if (typeof gameState[key] === 'number') {
+            if (gameState[key] < 0) gameState[key] = 0;
+            if (gameState[key] > 100) gameState[key] = 100;
+        }
+    });
 }
 
 /* 6. Navegación entre Áreas */
